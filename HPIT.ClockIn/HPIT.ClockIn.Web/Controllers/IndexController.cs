@@ -91,6 +91,20 @@ namespace HPIT.ClockIn.Web.Controllers
 
         }
         /// <summary>
+        /// 读取数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BasicSql()
+        {
+            using (SingleModel db = new SingleModel())
+            {
+                var list = db.LoinTable.FirstOrDefault(s => true);
+                return Json(list);
+            }
+
+
+        }
+        /// <summary>
         /// JSON
         /// </summary>
         public class SerResult
@@ -141,7 +155,7 @@ namespace HPIT.ClockIn.Web.Controllers
         }
         public ActionResult QueryName(CardViewModel model)
         {
-            SingleModel db = new SingleModel();      
+            SingleModel db = new SingleModel();
             var query = db.CardTable.AsQueryable();
             if (!string.IsNullOrWhiteSpace(model.C_Name))
             {
