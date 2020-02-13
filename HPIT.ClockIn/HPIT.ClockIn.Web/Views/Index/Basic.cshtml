@@ -9,10 +9,40 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Basic</title>
+    <link href="~/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
 </head>
 <body>
-    <div> 
-
+    <div>
+        <form class="layui-form" action="">
+            <table>
+                <tr>
+                    <td>账号：</td>
+                    <td> <input type="text" name="title" lay-verify="title" autocomplete="off" disabled readonly class="layui-input layui-disabled"></td>
+                </tr>
+                <tr>
+                    <td>姓名：</td>
+                    <td> <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入姓名" class="layui-input"></td>
+                </tr>
+                <tr>
+                    <td>修改密码为：</td>
+                    <td> <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>   <button type="button" class="layui-btn layui-btn-primary">保存</button></td>
+                </tr>
+            </table>
+        </form>
     </div>
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+        })
+    </script>
 </body>
 </html>

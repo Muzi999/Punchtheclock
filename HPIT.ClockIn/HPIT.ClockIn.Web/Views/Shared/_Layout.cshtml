@@ -42,8 +42,8 @@
                         闲心
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:void(0);" class="site-tab-active" data-type="tabAdd" lay-id="111" data-title="基本资料" data-id="11" data-url="/Index/Basic">基本资料</a></dd>
-                        <dd><a href="javascript:void(0);">安全设置</a></dd>
+                        <dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="111" data-title="基本资料" data-id="5" data-url="/Index/Basic">基本资料</a></dd>
+                        @*<dd><a href="javascript:void(0);">安全设置</a></dd>*@
                     </dl>
                 </li>
                 <li class="layui-nav-item"><a href="/Home/Login">退了</a></li>
@@ -56,17 +56,17 @@
                     <li class="layui-nav-item layui-nav-itemed">
                         <a class="" href="javascript:;">所有商品</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="11" data-title="暂无" data-id="1" data-url="javascript:void(0);">暂无</a></dd>
+                            @*<dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="11" data-title="暂无" data-id="1" data-url="">暂无</a></dd>*@
                             <dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="22" data-title="打卡" data-id="2" data-url="/Index/ClockIn">打卡</a></dd>
-                            <dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="33" data-title="暂无" data-id="3" data-url="javascript:void(0);">暂无</a></dd>
-                            <dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="88" data-title="暂无" data-id="8" data-url="javascript:void(0);">暂无</a></dd>
+                            @*<dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="33" data-title="暂无" data-id="3" data-url="javascript:void(0);">暂无</a></dd>
+                            <dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="88" data-title="暂无" data-id="8" data-url="javascript:void(0);">暂无</a></dd>*@
                         </dl>
                     </li>
                     <li class="layui-nav-item">
                         <a href="javascript:;">解决方案</a>
                         <dl class="layui-nav-child">
-                            <dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="11" data-title="暂无" data-id="4" data-url="javascript:void(0);">暂无</a></dd>
-                            <dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="11" data-title="暂无" data-id="5" data-url="javascript:void(0);">暂无</a></dd>
+                            @*<dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="44" data-title="暂无" data-id="4" data-url="javascript:void(0);">暂无</a></dd>
+                            <dd><a href="javascript:;" class="site-tab-active" data-type="tabAdd" lay-id="55" data-title="暂无" data-id="5" data-url="javascript:void(0);">暂无</a></dd>*@
                             <dd><a href="javascript:void(0);" class="site-demo-active" data-type="tabAdd">超链接</a></dd>
                         </dl>
                     </li>
@@ -114,7 +114,7 @@
                     var isData = false; //初始化一个标志，为false说明未打开该tab项 为true则说明已有
                     $.each($(".layui-tab-title li[lay-id]"), function () {
                         //如果点击左侧菜单栏所传入的id 在右侧tab项中的lay-id属性可以找到，则说明该tab项已经打开
-                        if ($(this).attr("lay-id") == dataid.attr("data-id")) {
+                        if ($(this).attr("lay-id") === dataid.attr("data-id")) {
                             isData = true;
                         }
                     })
