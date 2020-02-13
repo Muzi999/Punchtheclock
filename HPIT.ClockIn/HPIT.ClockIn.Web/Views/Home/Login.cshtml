@@ -1,0 +1,91 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <link href="~/CSS/styles.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/layui/layui.js"></script>
+    <style>
+        .Msg {
+            color: red;
+            padding-top: 15px;
+        }
+
+        body .layer_bg .layui-layer-title {
+            color: #808080;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="htmleaf-container">
+        <div class="wrapper">
+            <div class="container">
+                <h1>Welcome</h1>
+                <form class="form">
+                    <input type="text" placeholder="用户名" id="Mobile">
+                    <input type="password" placeholder="密码" id="Pwd">
+                    <button type="button" id="login-button">登录</button><br /><br />
+                    <button type="button" id="res-button">注册</button><br />
+                    <label class="Msg"></label>
+                </form>
+
+            </div>
+            <ul class="bg-bubbles">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        $('#login-button').click(function () {
+            $.post("/Home/Login", { Mobile: $.trim($("#Mobile").val()), Pwd: $.trim($("#Pwd").val()) }, function (data) {
+                if (data.State == 1) {
+                    location.href = '/Index/Index';
+                }
+                else {
+                    $(".Msg").text(data.Message);
+                }
+            });
+        });
+
+    </script>
+    <script>
+        layui.use(['layer', 'form'], function () {
+            var layer = layui.layer;
+            var form = layui.form;
+            $('#res-button').click(function () {
+                var index = layer.open({
+                    type: 2,
+                    content: '/Home/Register',
+                    title: '用户注册',
+                    skin: 'layer_bg',
+                    area: ['350px', '350px'],
+                    shade: [0.7, '#393D49'],
+                    anim: 2,
+                    resize: false               
+                });
+            })
+        });
+
+    </script>
+</body>
+
+</html>

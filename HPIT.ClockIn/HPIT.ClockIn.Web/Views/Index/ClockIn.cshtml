@@ -1,0 +1,177 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>打卡</title>
+    <link href="~/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <style>
+        .layui-table-cell {
+            height: 50px;
+            line-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <td><label>今日任务:&nbsp;</label></td>
+                <td width="500px"><input type="text" placeholder="请输入今日学习内容" class="layui-input" id="Task"></td>
+                <td> &nbsp;&nbsp;<button type="button" class="layui-btn layui-btn-primary" id="start">打卡</button></td>
+                <td> &nbsp;&nbsp; &nbsp;&nbsp;<label>搜索:&nbsp;</label></td>
+                <td width="500px"><input type="text" placeholder="请输入搜索名字" class="layui-input" id="Name"></td>
+                <td> &nbsp;&nbsp;<button type="button" class="layui-btn layui-btn-primary" id="btn_Query">搜索</button></td>
+            </tr>
+        </table>
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+    </div>
+    <div id="Edit" style="display:none">
+        <table>
+            <tr>
+                @*<td width="500px"><input type="text" placeholder="请输入今日任务反馈或评价" class="layui-input" id="Task1"></td>*@
+                <td><textarea placeholder="请输入今日任务反馈或评价" class="layui-textarea" id="Feedback" rows="19" cols="80" style="resize:none;"></textarea></td>
+            </tr>
+        </table>
+    </div>
+    <script id="barDemo" type="text/html">
+        <button type="button" class="layui-btn layui-btn-primary" lay-event="edit"> 结果反馈 </button>
+    </script>
+
+    <script>
+        var name;
+        layui.use(['table', 'form', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+         var  tableq= table.render({
+                elem: '#test'
+                , url: '/Index/QueryName'
+                , cols: [[{ type: 'radio' }
+                    , { field: 'C_Name', width: '6%', title: '用户名', align: 'center', sort: true }
+                    , {
+                    field: 'C_AddTime', width: '15%', title: '打卡时间', templet: function (c) {
+                        return getLocalTime(c.C_AddTime);
+                    }, align: 'center'
+                }
+                    , { field: 'C_Task', width: '30%', title: '任务' }
+                    , { field: 'C_Evaluate', title: '评价', width: '38.5%', } //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                    , { title: '操作', width: 130, toolbar: '#barDemo', fixed: 'right', align: 'center' }
+
+                ]],
+                page: true
+                , method: 'post'
+            });
+            $('#start').click(function () {
+                $.post("/Index/ClockIn", { C_Name: name, C_Task: $('#Task').val() }, function (data) {
+                    if (data.State == 1) {
+                        layer.msg(data.Message, { icon: 1 ,time:1200});
+                        // location.reload();
+                        table.reload('test', {
+
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        })
+
+                    }
+                    else {
+                        layer.msg(data.Message);
+                    }
+                });
+                $('#Task').val("");
+            });
+            $('#btn_Query').click(function () {
+                tableq.reload( {
+                    url: '/Index/QueryName',
+                    method: 'post',
+
+                    where: {
+                        C_Name: $('#Name').val()
+                    }
+                    ,
+                    page: {
+                        curr: 1
+                    },
+                    contentType: 'application/json'
+                });
+                console.log($('#Name').val());
+            });
+            //监听行工具事件
+            table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                var data = obj.data //获得当前行数据
+                    , layEvent = obj.event; //获得 lay-event 对应的值
+                if (layEvent === 'detail') {
+
+                } else if (layEvent === 'del') {
+
+                } else if (layEvent === 'edit') {
+                    //layer.msg(data.C_Name);
+                    // layer.msg(getLocalTime(data.C_AddTime));
+                    if (name == data.C_Name) {
+                        layer.open({
+                            skin: 'demo-class'
+                            , type: 1
+                            , content: $('#Edit')
+                            , btn: ['提交', '取消']
+                            , yes: function (index, layero) {
+                                // console.log(data.Id);
+                                $.post("/Index/Edit", { Id: data.Id, C_Evaluate: $(layero).find('#Feedback').val() }, function (data) {
+                                    if (data.State == 1) {
+                                        layer.msg(data.Message, { icon: 6 });
+                                        layer.close(index);
+                                        // location.reload();
+                                        table.reload('test', { page: { curr: 1 } })
+                                        $(layero).find('#Feedback').val("");
+                                        return false;
+
+                                    } else {
+                                        layer.msg(data.Message, { icon: 2 })
+                                    }
+                                }, "json")
+                            }
+                            , title: '结果反馈'
+                            , area: ['600px', '500px']
+                            , shade: [0.6, '#666666']
+                            , btnAlign: 'c'
+                            , anim: 5
+                            , resize: false
+                        })
+                    } else {
+                        layer.msg("别人的东西可是不能乱动的哟！", { icon: 6, time: 2100 })
+                    }
+                }
+            });
+        });
+        function getLocalTime(dateText) {////json日期格式转换为正常格式
+            //new Date():返回一个日期对象，可以调用getDate()
+            //parseInt():可解析一个字符串,并返回一个整数
+            //10：十进制
+            //replace():方法用于在字符串中用一些字符替换另一些字符
+            var date = new Date(parseInt(dateText.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds();
+            var milliSeconds = date.getMilliseconds();
+
+            return date.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + se(minutes) + ":" + se(seconds);
+        };
+        $.post("/Index/Name", function (data) {
+
+            name = data[0].Name;
+        });
+        function se(m) {
+            return m < 10 ? '0' + m : m
+        }
+
+    </script>
+</body>
+</html>
